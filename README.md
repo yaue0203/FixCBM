@@ -1,4 +1,4 @@
-# FixCBM: Concept-Consistent Semi-Supervised Learning for Concept Bottleneck Models via Confidence-Guided Pseudo-Label Propagation
+<h1 align="center">FixCBM: Concept-Consistent Semi-Supervised Learning for Concept Bottleneck Models via Confidence-Guided Pseudo-Label Propagation</h1>
 
 <p align="center">
   <img src="docs/figures/Figure1.jpg" alt="FixCBM framework" width="100%">
