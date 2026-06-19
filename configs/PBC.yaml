@@ -1,0 +1,43 @@
+dataset_config:
+  dataset: PBC
+  num_workers: 64
+  batch_size: 256
+  root_dir: ./data/PBC
+  sampling_percent: 1
+  test_subsampling: 1
+  weight_loss: true
+skip_repr_evaluation: false
+run_repr_avg_pred: true
+run_cas: false
+run_nis: true
+run_ois: true
+max_epochs: 40
+top_k_accuracy: null
+save_model: true
+patience: 15
+emb_size: 32
+extra_dims: 0
+concept_loss_weight_labeled: 1
+concept_loss_weight_unlabeled: 0.1
+learning_rate: 0.01
+weight_decay: 5.0e-06
+weight_loss: true
+c_extractor_arch: resnet34
+optimizer: sgd
+bool: false
+early_stopping_monitor: val_loss
+early_stopping_mode: min
+early_stopping_delta: 0.0
+momentum: 0.9
+sigmoidal_prob: false
+training_intervention_prob: 0.25
+runs:
+- architecture: FixCBM
+  run_name: FixCBM
+  sigmoidal_prob: false
+  training_intervention_prob: 0.25
+  embedding_activation: leakyrelu
+  fixmatch_threshold: 0.95
+  concept_loss_weight_labeled: 1
+  concept_loss_weight_unlabeled: 0.1
+  warmup_epochs: 10

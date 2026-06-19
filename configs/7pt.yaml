@@ -1,0 +1,46 @@
+dataset_config:
+  dataset: 7pt
+  num_workers: 4
+  batch_size: 32
+  root_dir: ./data/7point
+  sampling_percent: 1
+  test_subsampling: 1
+  weight_loss: true
+skip_repr_evaluation: false
+run_repr_avg_pred: true
+run_cas: false
+run_nis: true
+run_ois: true
+max_epochs: 50
+top_k_accuracy: null
+save_model: true
+patience: 15
+emb_size: 16
+extra_dims: 0
+concept_loss_weight_labeled: 1.345335781634462
+concept_loss_weight_unlabeled: 0.7580810977398789
+learning_rate: 0.044371941710166
+weight_decay: 8.612576014221159e-06
+weight_loss: true
+c_extractor_arch: resnet34
+optimizer: sgd
+bool: false
+early_stopping_monitor: val_loss
+early_stopping_mode: min
+early_stopping_delta: 0.0
+momentum: 0.8758582933432262
+sigmoidal_prob: true
+training_intervention_prob: 0.10127699527980649
+gradient_clip_val: 1.0
+dropout: 0.5
+runs:
+- architecture: FixCBM
+  run_name: FixCBM
+  sigmoidal_prob: true
+  training_intervention_prob: 0.10127699527980649
+  embedding_activation: leakyrelu
+  fixmatch_threshold: 0.8899028192229512
+  concept_loss_weight_labeled: 1.345335781634462
+  concept_loss_weight_unlabeled: 0.7580810977398789
+  warmup_epochs: 10
+  dropout: 0.5

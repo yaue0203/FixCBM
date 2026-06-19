@@ -1,0 +1,44 @@
+dataset_config:
+  dataset: CUB-200-2011
+  num_workers: 4
+  batch_size: 32
+  root_dir: ./data/CUB_200_2011
+  sampling_percent: 1
+  test_subsampling: 1
+  weight_loss: true
+skip_repr_evaluation: false
+run_repr_avg_pred: true
+run_cas: false
+run_nis: false
+run_ois: false
+max_epochs: 70
+top_k_accuracy: null
+save_model: true
+patience: 15
+emb_size: 64
+extra_dims: 0
+concept_loss_weight_labeled: 0.3793841731572668
+concept_loss_weight_unlabeled: 0.6491327337426986
+learning_rate: 0.015509423768632121
+weight_decay: 4.941669161921536e-06
+weight_loss: true
+c_extractor_arch: resnet34
+optimizer: sgd
+bool: false
+early_stopping_monitor: val_y_acc
+early_stopping_mode: max
+early_stopping_delta: 0.0
+momentum: 0.8794807979629855
+sigmoidal_prob: true
+training_intervention_prob: 0.31710052740449934
+warmup_epochs: 10
+runs:
+- architecture: FixCBM
+  run_name: FixCBM
+  sigmoidal_prob: true
+  training_intervention_prob: 0.31710052740449934
+  embedding_activation: leakyrelu
+  fixmatch_threshold: 0.95
+  concept_loss_weight_labeled: 0.3793841731572668
+  concept_loss_weight_unlabeled: 0.6491327337426986
+  warmup_epochs: 10

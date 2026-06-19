@@ -1,0 +1,59 @@
+model_selection_groups:
+- - ^CEM
+  - CEM
+- - ^IntCEM(.*)
+  - IntCEM
+- - ^CBM_Sigmoid
+  - CBM_Logit
+- - ^CBM_Ind
+  - CBM_Seq
+model_selection_metrics:
+- val_acc_y
+dataset_config:
+  dataset: CelebA
+  image_size: 299
+  num_classes: 1000
+  batch_size: 512
+  root_dir: ./data/CelebA
+  use_imbalance: true
+  use_binary_vector_class: true
+  num_concepts: 6
+  label_binary_width: 1
+  label_dataset_subsample: 1
+  num_hidden_concepts: 2
+  selected_concepts: false
+  num_workers: 8
+skip_repr_evaluation: true
+top_k_accuracy:
+- 3
+- 5
+- 10
+save_model: true
+max_epochs: 50
+patience: 15
+emb_size: 16
+extra_dims: 0
+concept_loss_weight_labeled: 1
+concept_loss_weight_unlabeled: 0.1
+learning_rate: 0.005
+weight_decay: 4.0e-06
+weight_loss: false
+c_extractor_arch: resnet34
+optimizer: sgd
+bool: false
+early_stopping_monitor: val_loss
+early_stopping_mode: min
+early_stopping_delta: 0.0
+momentum: 0.9
+sigmoidal_prob: false
+training_intervention_prob: 0.25
+runs:
+- architecture: FixCBM
+  run_name: FixCBM
+  sigmoidal_prob: false
+  training_intervention_prob: 0.25
+  embedding_activation: leakyrelu
+  fixmatch_threshold: 0.95
+  concept_loss_weight_labeled: 1
+  concept_loss_weight_unlabeled: 0.1
+  warmup_epochs: 10
