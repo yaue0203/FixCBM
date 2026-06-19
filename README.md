@@ -1,7 +1,4 @@
 # FixCBM
-
-Code release for **Concept-Consistent Semi-Supervised Learning for Concept Bottleneck Models via Confidence-Guided Pseudo-Label Propagation**.
-
 FixCBM is a semi-supervised Concept Bottleneck Model framework. It learns from scarce concept annotations by generating pseudo-labels from weakly augmented views, filtering them with per-concept confidence, and enforcing weak-to-strong consistency in concept probability space.
 
 <p align="center">
@@ -19,33 +16,33 @@ FixCBM is a semi-supervised Concept Bottleneck Model framework. It learns from s
 
 ```text
 FixCBM/
-  main.py                  # Main entry point for training and evaluation
-  requirements.txt         # Python dependencies
-  environment.yml          # Optional conda environment file
-  configs/                 # Dataset-specific experiment settings
-    basic_config.py        # Command-line arguments
-    CUB-200-2011.yaml      # CUB-200-2011 configuration
-    7pt.yaml               # 7-point skin lesion configuration
-    AwA2.yaml              # Animals with Attributes 2 configuration
-    PBC.yaml               # PBC configuration
-    CelebA.yaml            # CelebA configuration
-  data/                    # Dataset loaders and semi-supervised split logic
-    cub_loader.py          # CUB-200-2011 loader and FixMatch augmentations
-    pt_loader.py           # 7-point loader
-    awa2_loader.py         # AwA2 loader
-    pbc_loader.py          # PBC loader
-    celeba_loader.py       # CelebA loader
-  models/                  # FixCBM model code
-    fixcbm.py              # FixCBM architecture and training steps
-    construction.py        # Model builder and checkpoint loader
-  train/                   # Training and evaluation utilities
-    training.py            # Training loop, validation, testing, result logging
-    evaluate.py            # Representation and concept evaluation helpers
-    utils.py               # Accuracy, backbone wrapping, and Lightning helpers
-  visualization/           # Visualization utilities
-    heatmap.py             # Heatmap generation from a trained FixCBM checkpoint
-  docs/                    # Documentation and paper figures
-  scripts/                 # Example shell scripts for common runs
+├── main.py                         # Main entry point for training and evaluation
+├── requirements.txt                # Python dependencies
+├── environment.yml                 # Optional conda environment file
+├── configs/
+│   ├── basic_config.py             # Command-line arguments
+│   ├── CUB-200-2011.yaml           # CUB-200-2011 configuration
+│   ├── 7pt.yaml                    # 7-point skin lesion configuration
+│   ├── AwA2.yaml                   # Animals with Attributes 2 configuration
+│   ├── PBC.yaml                    # PBC configuration
+│   └── CelebA.yaml                 # CelebA configuration
+├── data/
+│   ├── cub_loader.py               # CUB-200-2011 loader and FixMatch augmentations
+│   ├── pt_loader.py                # 7-point loader
+│   ├── awa2_loader.py              # AwA2 loader
+│   ├── pbc_loader.py               # PBC loader
+│   └── celeba_loader.py            # CelebA loader
+├── models/
+│   ├── fixcbm.py                   # FixCBM architecture and training steps
+│   └── construction.py             # Model builder and checkpoint loader
+├── train/
+│   ├── training.py                 # Training loop, validation, testing, result logging
+│   ├── evaluate.py                 # Representation and concept evaluation helpers
+│   └── utils.py                    # Accuracy, backbone wrapping, and Lightning helpers
+├── visualization/
+│   └── heatmap.py                  # Heatmap generation from a trained FixCBM checkpoint
+├── docs/
+└── scripts/
 ```
 
 ## Installation
@@ -92,17 +89,13 @@ pip install -e /path/to/concept-embedding-models
 
 ### 2. Prepare datasets
 
-Download the target dataset and set `dataset_config.root_dir` in the matching config file:
+Download CUB-200-2011 and set `dataset_config.root_dir` in the matching config file:
 
 ```text
 configs/CUB-200-2011.yaml
-configs/7pt.yaml
-configs/AwA2.yaml
-configs/PBC.yaml
-configs/CelebA.yaml
 ```
 
-For example, for CUB-200-2011:
+For example:
 
 ```yaml
 dataset_config:
@@ -120,23 +113,16 @@ Train FixCBM on CUB-200-2011 with 10% concept labels:
 python main.py --dataset CUB-200-2011 --labeled_ratio 0.1 --seed 42
 ```
 
-Train FixCBM on 7-point:
-
-```bash
-python main.py --dataset 7pt --labeled_ratio 0.1 --seed 42
-```
-
-Equivalent shell scripts are provided:
+An equivalent shell script is provided:
 
 ```bash
 bash scripts/run_cub.sh
-bash scripts/run_7pt.sh
 ```
 
 ### 4. Useful arguments
 
 ```text
---dataset         Dataset config name, such as CUB-200-2011 or 7pt.
+--dataset         Dataset config name. Use CUB-200-2011 for this example.
 --labeled_ratio   Ratio of samples with concept labels.
 --seed            Random seed for data split and training.
 --image_encoder   Backbone name. Default: resnet34.
