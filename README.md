@@ -1,4 +1,4 @@
-# FixCBM
+# FixCBM：Concept-Consistent Semi-Supervised Learning for Concept Bottleneck Models via Confidence-Guided Pseudo-Label Propagation
 FixCBM is a semi-supervised Concept Bottleneck Model framework. It learns from scarce concept annotations by generating pseudo-labels from weakly augmented views, filtering them with per-concept confidence, and enforcing weak-to-strong consistency in concept probability space.
 
 <p align="center">
