@@ -33,9 +33,3 @@ dataset_config:
   dataset: "7pt"
   root_dir: ./data/7point
 ```
-
-## Notes
-
-- Raw datasets, checkpoints, logs, and model weights are intentionally ignored by git.
-- Keep large files outside the repository or provide download scripts/links.
-- For reproducibility, use the same `--seed`, `--labeled_ratio`, and config file used in the paper experiments.

@@ -15,17 +15,37 @@ FixCBM is a semi-supervised Concept Bottleneck Model framework. It learns from s
 - Warmup scheduling to reduce noisy unlabeled losses early in training.
 - Dataset loaders and configs for CUB-200-2011, AwA2, PBC, CelebA, and 7-point.
 
-## Repository Layout
+## Repository Structure
 
 ```text
 FixCBM/
-  configs/        Dataset and experiment configs
-  data/           Dataset loaders and semi-supervised split logic
-  docs/           Dataset, reproduction, and project-structure notes
-  models/         FixCBM model and model construction code
-  scripts/        Example run scripts
-  train/          Training and evaluation loops
-  visualization/  Heatmap visualization script
+  main.py                  # Main entry point for training and evaluation
+  requirements.txt         # Python dependencies
+  environment.yml          # Optional conda environment file
+  configs/                 # Dataset-specific experiment settings
+    basic_config.py        # Command-line arguments
+    CUB-200-2011.yaml      # CUB-200-2011 configuration
+    7pt.yaml               # 7-point skin lesion configuration
+    AwA2.yaml              # Animals with Attributes 2 configuration
+    PBC.yaml               # PBC configuration
+    CelebA.yaml            # CelebA configuration
+  data/                    # Dataset loaders and semi-supervised split logic
+    cub_loader.py          # CUB-200-2011 loader and FixMatch augmentations
+    pt_loader.py           # 7-point loader
+    awa2_loader.py         # AwA2 loader
+    pbc_loader.py          # PBC loader
+    celeba_loader.py       # CelebA loader
+  models/                  # FixCBM model code
+    fixcbm.py              # FixCBM architecture and training steps
+    construction.py        # Model builder and checkpoint loader
+  train/                   # Training and evaluation utilities
+    training.py            # Training loop, validation, testing, result logging
+    evaluate.py            # Representation and concept evaluation helpers
+    utils.py               # Accuracy, backbone wrapping, and Lightning helpers
+  visualization/           # Visualization utilities
+    heatmap.py             # Heatmap generation from a trained FixCBM checkpoint
+  docs/                    # Documentation and paper figures
+  scripts/                 # Example shell scripts for common runs
 ```
 
 ## Installation
@@ -56,26 +76,104 @@ Before running an experiment, edit the corresponding file under `configs/` and s
 
 ## Quick Start
 
-Run CUB-200-2011 with 10% concept labels:
+### 1. Install dependencies
+
+```bash
+conda create -n fixcbm python=3.8
+conda activate fixcbm
+pip install -r requirements.txt
+```
+
+Install the external CEM dependency used by the shared metrics and helper utilities:
+
+```bash
+pip install -e /path/to/concept-embedding-models
+```
+
+### 2. Prepare datasets
+
+Download the target dataset and set `dataset_config.root_dir` in the matching config file:
+
+```text
+configs/CUB-200-2011.yaml
+configs/7pt.yaml
+configs/AwA2.yaml
+configs/PBC.yaml
+configs/CelebA.yaml
+```
+
+For example, for CUB-200-2011:
+
+```yaml
+dataset_config:
+  dataset: CUB-200-2011
+  root_dir: ./data/CUB_200_2011
+```
+
+More dataset layout notes are available in [docs/DATASETS.md](docs/DATASETS.md).
+
+### 3. Run training
+
+Train FixCBM on CUB-200-2011 with 10% concept labels:
 
 ```bash
 python main.py --dataset CUB-200-2011 --labeled_ratio 0.1 --seed 42
 ```
 
-Run 7-point with the default config:
+Train FixCBM on 7-point:
 
 ```bash
 python main.py --dataset 7pt --labeled_ratio 0.1 --seed 42
 ```
 
-Outputs are written under `checkpoints/` by default. Each run stores logs, resolved arguments, resolved experiment config, results, and a zip snapshot of Python source files.
+Equivalent shell scripts are provided:
 
-## Method
+```bash
+bash scripts/run_cub.sh
+bash scripts/run_7pt.sh
+```
 
-FixCBM trains on labeled samples with supervised concept and task losses. For unlabeled concept annotations, it:
+### 4. Useful arguments
 
-1. Predicts per-concept probabilities from weakly augmented views.
-2. Converts confident predictions into pseudo-labels.
-3. Masks uncertain concept predictions.
-4. Enforces consistency on strongly augmented views.
-5. Applies warmup so unlabeled concept loss increases gradually.
+```text
+--dataset         Dataset config name, such as CUB-200-2011 or 7pt.
+--labeled_ratio   Ratio of samples with concept labels.
+--seed            Random seed for data split and training.
+--image_encoder   Backbone name. Default: resnet34.
+--save_path       Output directory. Default: ./checkpoints/.
+--device          Training device. Use gpu when CUDA is available.
+```
+
+### 5. Outputs
+
+Outputs are written under `checkpoints/` by default. Each run creates a timestamped folder containing:
+
+```text
+running.log
+args.yml
+experiment_config.yaml
+results.txt
+codes.zip
+FixCBM.pt
+```
+
+### 6. Heatmap visualization
+
+After training, generate CUB heatmaps from a saved checkpoint directory:
+
+```bash
+python visualization/heatmap.py \
+  --dataset CUB-200-2011 \
+  --checkpoint_dir checkpoints/<run_folder> \
+  --model_name FixCBM
+```
+
+## Method Overview
+
+FixCBM applies weak-to-strong consistency in concept space:
+
+1. Predict concept probabilities from weakly augmented images.
+2. Select high-confidence concept predictions as pseudo-labels.
+3. Apply strong augmentation to the same images.
+4. Enforce consistency between strong-view predictions and selected pseudo-labels.
+5. Use warmup scheduling to reduce early pseudo-label noise.
